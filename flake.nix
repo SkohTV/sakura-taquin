@@ -27,7 +27,7 @@
                 virtualenv # Virtualenv
                 pip # The pip installer
 
-                pyqt6
+                pyside6
               ]))
             ];
           };
