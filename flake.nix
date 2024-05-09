@@ -23,11 +23,13 @@
           in
           pkgs.mkShell {
             packages = [
+              pkgs.qt6.full # QT Wayland package
+
               (python.withPackages (ps: with ps; [
                 virtualenv # Virtualenv
                 pip # The pip installer
 
-                pyside6
+                pyside6 # QT
               ]))
             ];
           };
