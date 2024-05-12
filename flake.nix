@@ -24,6 +24,7 @@
           pkgs.mkShell {
             packages = [
               pkgs.qt6.full # QT Wayland package
+              pkgs.jetbrains.pycharm-professional # Pycharm
 
               (python.withPackages (ps: with ps; [
                 virtualenv # Virtualenv
