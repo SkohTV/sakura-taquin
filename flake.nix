@@ -30,6 +30,7 @@
                 virtualenv # Virtualenv
                 pip # The pip installer
 
+                pillow
                 pyside6 # QT
               ]))
             ];
