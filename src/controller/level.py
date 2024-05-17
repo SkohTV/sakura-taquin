@@ -4,9 +4,9 @@ from PySide6.QtWidgets import QTextEdit
 class Level(QTextEdit):
   ''' Une case qui permet de choisir les dimensions  de la grille '''
 
-  def __init__(self) -> None:
+  def __init__(self, model) -> None:
     super().__init__()
-    self.model = None
+    self.model = model
     # self.value = None
 
   # def validate_input(self) -> bool:
