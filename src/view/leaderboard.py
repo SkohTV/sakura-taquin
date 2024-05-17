@@ -1,6 +1,11 @@
+# Circular reference import solving
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+  from model.game import Game
+
 from datetime import timedelta
 from collections import namedtuple
-from PySide6 import QtCore
 from PySide6.QtWidgets import QLabel
 
 
@@ -10,13 +15,13 @@ Score = namedtuple('Score', 'level moves time')
 class Leaderboard(QLabel):
   '''Affiche les meilleurs scores'''
 
-  def __init__(self, model) -> None:
+  def __init__(self, model: Game) -> None:
     super().__init__()
     self.model = model
     self.scores: list[Score] = []
 
     # trash values
-    self.score = [
+    self.scores = [
       Score(3, 3, timedelta(minutes=3, seconds=2)),
       Score(2, 3, timedelta(minutes=1, seconds=20)),
       Score(3, 1, timedelta(minutes=0, seconds=45))

@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QGridLayout, QWidget
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from controller.level import Level
+from controller.randomize import Randomize
 
 from controller.upload import Upload
 
@@ -32,20 +33,21 @@ class Game(QWidget):
     self.name = Name(self)
     self.title = Title(self)
     self.upload = Upload(self)
+    self.randomize = Randomize(self)
     self.image_end = Image_end(self)
     self.count = Count(self)
-    # self.level = Level(self)
+    self.level = Level(self)
     self.leaderboard = Leaderboard(self)
-    self.leaderboard.render()
 
     # .addWidget(x, y, hauteur, largeur)
     self.grid_big = QGridLayout()
     self.grid_big.addWidget(self.name)
     self.grid_big.addWidget(self.title)
     self.grid_big.addWidget(self.upload)
+    self.grid_big.addWidget(self.randomize)
     self.grid_big.addWidget(self.image_end)
     self.grid_big.addWidget(self.count)
-    # self.grid_big.addWidget(self.level)
+    self.grid_big.addWidget(self.level)
     self.grid_big.addWidget(self.leaderboard)
     self.setLayout(self.grid_big)
 
