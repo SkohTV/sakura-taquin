@@ -25,6 +25,7 @@
             packages = [
               pkgs.qt6.full # QT Wayland package
               pkgs.jetbrains.pycharm-professional # Pycharm
+              pkgs.gnome.nautilus # File manager
 
               (python.withPackages (ps: with ps; [
                 virtualenv # Virtualenv

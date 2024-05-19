@@ -6,6 +6,8 @@ if TYPE_CHECKING:
 
 from datetime import timedelta
 from collections import namedtuple
+
+from PySide6 import QtCore
 from PySide6.QtWidgets import QLabel
 
 
@@ -19,6 +21,8 @@ class Leaderboard(QLabel):
     super().__init__()
     self.model = model
     self.scores: list[Score] = []
+    self.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify)
+    self.setStyleSheet('font-size: 18px')
 
     # trash values
     self.scores = [
@@ -35,6 +39,6 @@ class Leaderboard(QLabel):
     sorted(self.scores)
     text = ''
     for i in self.scores:
-      text += f'{i.level} - {i.moves} - {i.time}\n'
+      text += f'{i.level}x{i.level} - {i.moves} coups - {i.time}\n'
     self.setText(text)
 

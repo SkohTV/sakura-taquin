@@ -20,3 +20,4 @@ class Upload(QPushButton):
     self.model.image_path, _ = QFileDialog.getOpenFileName()
     self.model.load_image()
     self.model.image_end.set_image()
+    self.model.cut_image()

@@ -4,17 +4,18 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
   from model.game import Game
 
-from PySide6.QtWidgets import QTextEdit
+from PySide6.QtWidgets import QSpinBox
 
 
-class Level(QTextEdit):
+class Level(QSpinBox):
   ''' Une case qui permet de choisir les dimensions  de la grille '''
 
   def __init__(self, model: Game) -> None:
     super().__init__()
     self.model = model
-    # self.value = None
+    self.setMinimum(2)
+    self.setMaximum(99)
+    self.setValue(3)
 
-  # def validate_input(self) -> bool:
-  #   return self.toPlainText().isdigit() # permet de vérifier que ce qu'il y'a dans la case est un entier
+    self.valueChanged.connect(self.model.cut_image)
 

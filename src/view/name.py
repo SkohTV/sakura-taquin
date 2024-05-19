@@ -16,9 +16,4 @@ class Name(QLabel):
     self.model = model
     self.setText('The Sakura\'s Taquin Game')
     self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-
-    self.setFont(QtGui.QFont('Super Creamy', 36))
-
-    # Ajoute d'une police custom
-
-    #self.setStyleSheet()
+    self.setFont(QtGui.QFont('Super Creamy', 48))

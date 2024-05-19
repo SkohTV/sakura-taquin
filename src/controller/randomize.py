@@ -5,7 +5,7 @@ if TYPE_CHECKING:
   from model.game import Game
 
 from PySide6.QtWidgets import QPushButton
-# import random
+import random
 
 
 
@@ -16,8 +16,12 @@ class Randomize(QPushButton):
     super().__init__()
     self.model = model
     self.setText('Randomize')
-    # self.clicked.connect(self.randomize) #n'appelle pas la fonction car pas de parentheses
+    self.clicked.connect(self.randomize) #n'appelle pas la fonction car pas de parentheses
 
-  # def randomize(self) -> None:
-  #     tmp = [i for i in range(25)]
-  #     random.shuffle(tmp)
+  def randomize(self) -> None:
+    self.model.image_array.sort(key=lambda x: 99999999 if x[1] is None else x[1])
+    squares = self.model.image_array[:-1]
+    random.shuffle(squares)
+    self.model.image_array[:-1] = squares
+    self.model.grid.full_render()
+

@@ -4,7 +4,9 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
   from model.game import Game
 
+from PySide6 import QtGui
 from PySide6.QtWidgets import QLabel
+from PIL.ImageQt import ImageQt
 
 
 class Image_end(QLabel):
@@ -15,5 +17,7 @@ class Image_end(QLabel):
     self.model = model
 
   def set_image(self) -> None:
-    self.setPixmap(self.model.image_full.scaled(500, 500))
+    im = self.model.image_full
+    pixmap = QtGui.QPixmap.fromImage(ImageQt(im))
+    self.setPixmap(pixmap.scaled(600, 600))
 
