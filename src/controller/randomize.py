@@ -18,10 +18,27 @@ class Randomize(QPushButton):
     self.setText('Randomize')
     self.clicked.connect(self.randomize) #n'appelle pas la fonction car pas de parentheses
 
+
   def randomize(self) -> None:
-    self.model.image_array.sort(key=lambda x: 99999999 if x[1] is None else x[1])
-    squares = self.model.image_array[:-1]
-    random.shuffle(squares)
-    self.model.image_array[:-1] = squares
-    self.model.grid.full_render()
+    '''blablabla'''
+    images = self.model.image_array
+
+    for idx, itm in enumerate(images):
+      if itm.is_blank:
+        blank = idx
+
+    images[-1], images[blank] = images[blank], images[-1] # type: ignore
+
+    first_images = self.model.image_array[:-1]
+    positions = []
+
+    for i in first_images:
+      positions.append((i.true_x, i.true_y))
+    random.shuffle(positions)
+
+    for itm, (x, y) in zip(first_images, positions):
+      itm.current_x, itm.current_y = x, y
+      
+    self.model.image_array[:-1] = first_images
+    self.model.image_center.generate_image()
 
