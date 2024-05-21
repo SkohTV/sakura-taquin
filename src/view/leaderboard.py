@@ -5,11 +5,14 @@ if TYPE_CHECKING:
   from model.game import Game
 
 from collections import namedtuple
-
 from PySide6 import QtCore
 from PySide6.QtWidgets import QLabel
 
 
+
+# Create a small class (named tuple)
+# class: Score
+# fields: level (int), moves (int), time (float)
 Score = namedtuple('Score', 'level moves time')
 
 
@@ -25,11 +28,13 @@ class Leaderboard(QLabel):
 
 
   def add(self, level: int, moves: int, time: float) -> None:
+    '''Add a score entry from values'''
     new_score = Score(level, moves, time)
     self.scores.append(new_score)
 
 
   def render(self) -> None:
+    '''Sort the scores and display them in order'''
     sorted(self.scores)
     text = '<b>----- Leaderboard -----</b><br>'
 

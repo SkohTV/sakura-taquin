@@ -8,9 +8,10 @@ from PySide6 import QtCore, QtGui
 from PySide6.QtWidgets import QLabel
 
 
-class Name(QLabel):
-  '''On affiche le nom de notre jeu : "The Sakura's Taquin game"'''
 
+class Name(QLabel):
+  '''Show the name of our game'''
+  
   def __init__(self, model: Game) -> None:
     super().__init__()
     self.model = model

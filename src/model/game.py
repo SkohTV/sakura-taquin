@@ -18,14 +18,15 @@ from view.title import Title
 
 
 
+# Create a small class to store informations about an image
 @dataclass
 class Square:
-  im: Image.Image
-  true_x: int
-  true_y: int
-  current_x: int
-  current_y: int
-  is_blank: bool = False
+  im: Image.Image # The image object
+  true_x: int # The correct x pos of the image
+  true_y: int # The correct y pos
+  current_x: int # The current x pos
+  current_y: int # The current y pos
+  is_blank: bool = False # If the image is blank or not
 
 
 class Game(QMainWindow):
@@ -33,13 +34,17 @@ class Game(QMainWindow):
 
   def __init__(self) -> None:
     super().__init__()
+
+    # Create a widget as main widget to force user focus on THIS widget
     self.widget = QWidget()
     self.setCentralWidget(self.widget)
     self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
 
+    # Add fonts
     QtGui.QFontDatabase.addApplicationFont('assets/super_creamy.ttf')
     QtGui.QFontDatabase.addApplicationFont('assets/comic_sans_ms.ttf')
 
+    # Creation of variables to stock image values
     self.image_path = 'default'
     self.image_full = Image.new('RGB', (600, 600))
     self.image_shuffled = Image.new('RGB', (600, 600))
@@ -48,6 +53,7 @@ class Game(QMainWindow):
     self.full_size = 600
     self.game = False
 
+    # Store widgets in variables
     self.name = Name(self)
     self.title = Title(self)
     self.upload = Upload(self)
@@ -59,6 +65,7 @@ class Game(QMainWindow):
     self.timer = Timer(self)
     self.source = Source(self)
 
+    # Place widgets on layout and add layout to window
     # .addWidget(y, x, hauteur, largeur)
     self.grid_big = QGridLayout()
     self.grid_big.addWidget(self.name, 1, 1, 1, 13)
@@ -73,10 +80,12 @@ class Game(QMainWindow):
     self.grid_big.addWidget(self.source, 11, 13, 1, 1)
     self.widget.setLayout(self.grid_big)
 
+    # Set window parameters
     self.setWindowTitle('Sakura\'s Taquin')
     self.setMinimumSize(900, 800)
     self.setFont(QtGui.QFont('Comic Sans MS', 18))
 
+    # Load the image and prepare the game
     self.leaderboard.render()
     self.load_image()
     self.cut_image()
@@ -104,39 +113,48 @@ class Game(QMainWindow):
       right = center_x + size//2
       bottom = center_y + size//2
 
+      # Convert full size image to 600x600 image
       im = im.crop((left, top, right, bottom))
       im = im.resize((600, 600))
 
-      self.image_full = im
+      self.image_full = im # Store the image
 
 
   def cut_image(self) -> None:
     ''' Permet de couper l'image en n cases en fonction du level '''
+
+    # Reset old image stored values
     n = self.level.value()
     self.small_size = 600//n
     self.full_size = n * self.small_size
     self.image_array.clear()
 
+    # Loop as many times as there are images
+    # To generate small images
     for i in range(n**2 - 1):
-      x, y = i%n, i//n
+      x, y = i%n, i//n # Compute x and y of current small image
 
       left = x * self.small_size
       top = y * self.small_size
       right = left + self.small_size
       bottom = top + self.small_size
 
+      # Create small image square (image + position now + position correct) from big image
       small_im = self.image_full.crop((left, top, right, bottom))
       sq = Square(small_im, x, y, x, y)
-      self.image_array.append(sq)
+      self.image_array.append(sq) # Store images in image_array
 
-    blank = Image.new('RGB', (self.small_size, self.small_size), '#000000')
+    # Also create a blank small square
+    blank = Image.new('RGBA', (self.small_size, self.small_size), (0, 0, 0, 0))
     bl = Square(blank, n-1, n-1, n-1, n-1, is_blank=True)
     self.image_array.append(bl)
 
+    # Randomize the squares
     self.randomize.randomize()
 
 
   def full_check(self) -> bool:
+    '''Check if all images are in the correct position'''
     for i in self.image_array:
       if not i.current_x == i.true_x or not i.current_y == i.true_y:
         return False
@@ -145,8 +163,12 @@ class Game(QMainWindow):
 
 
   def move_img(self, dir) -> None:
+    '''Move an image to the blank spot'''
+
+    # Get the blank spot
     blank = self.image_array[-1]
 
+    # Get coordinates of case next to blank spot, depending on key pressed
     if dir == 'up' and not blank.current_y == 0:
         case = blank.current_x, blank.current_y - 1
 
@@ -162,23 +184,32 @@ class Game(QMainWindow):
     else:
       return
 
+    # Find the case corresponding to coordinates and change them to the blank coordinates
     for i in self.image_array:
       if i.current_x == case[0] and i.current_y == case[1]:
         i.current_x, i.current_y = blank.current_x, blank.current_y
+
+    # Set blank coordinates to selected case coordinates
     blank.current_x, blank.current_y = case
 
+    # Regenerate image
     self.image_center.generate_image()
 
+    # If first move, start the game
     if self.count.count == 0:
       self.timer.start()
 
+    # Add one to the counter
     self.count.add()
 
+    # If finished, then end
     if self.full_check():
       self.stop_game()
 
 
   def stop_game(self) -> None:
+    '''Stop the game'''
+
     self.timer.stop()
     self.leaderboard.add(level=self.level.value(), moves=self.count.count, time=self.timer.current_time)
     self.leaderboard.render()
@@ -187,16 +218,20 @@ class Game(QMainWindow):
 
 
   def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:
-    if not self.game:
+    '''Function called automatically on key press'''
+    if not self.game: # If game is not running (full image), do nothing
       return
 
+    # Get readable names for keys
     down = QtCore.Qt.Key.Key_Down
     up = QtCore.Qt.Key.Key_Up
     left = QtCore.Qt.Key.Key_Left
     right = QtCore.Qt.Key.Key_Right
 
+    # Get pressed key
     key = event.key()
 
+    # Match key pressed to square movement
     if key == down:
       self.move_img('up')
     elif key == up:
@@ -206,8 +241,3 @@ class Game(QMainWindow):
     elif key == left:
       self.move_img('right')
 
-
-
-
-if __name__ == '__main__':
-  ...

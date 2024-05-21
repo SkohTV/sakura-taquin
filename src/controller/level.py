@@ -8,8 +8,9 @@ from PySide6 import QtCore
 from PySide6.QtWidgets import QSpinBox
 
 
+
 class Level(QSpinBox):
-  ''' Une case qui permet de choisir les dimensions  de la grille '''
+  '''Select the dimensions in which to cut the image'''
 
   def __init__(self, model: Game) -> None:
     super().__init__()
@@ -17,7 +18,9 @@ class Level(QSpinBox):
     self.setMinimum(2)
     self.setMaximum(99)
     self.setValue(3)
-    self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+
+    # Disable the ability to focus it (keep arrows for movement, not number up/down)
+    self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus) 
 
     self.valueChanged.connect(self.model.cut_image)
 

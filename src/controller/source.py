@@ -8,18 +8,18 @@ import webbrowser
 from PySide6.QtWidgets import QPushButton
 
 
+
 class Source(QPushButton):
-  '''Affiche la duree entre le premier et le dernier coups'''
+  '''Open a link with the source code'''
 
   def __init__(self, model: Game) -> None:
     super().__init__()
     self.model = model
     self.clicked.connect(self.on_click)
     self.setFixedSize(50, 50)
-    self.setStyleSheet('border-image: url(assets/github.png) 0 0 0 0 strech strech')
+    self.setStyleSheet('border-image: url(assets/github.png) 0 0 0 0 strech strech') # Show the github logo on the button
+
 
   def on_click(self) -> None:
+    '''Open the url in a new tab'''
     webbrowser.open('https://github.com/SkohTV/sakura-taquin')
-
-  # def change_title(self, title1: str) -> None:
-  #   self.setText(title1)

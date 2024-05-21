@@ -8,15 +8,17 @@ from PySide6 import QtCore
 from PySide6.QtWidgets import QLabel
 
 
+
 class Title(QLabel):
-  '''Le titre change en fonction de l'image mise dans la grille '''
+  '''Title of the image shown'''
 
   def __init__(self, model: Game) -> None:
     super().__init__()
     self.model = model
-    self.setText('Hello')
     self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-    self.setStyleSheet('font-size: 36x')
+    self.setStyleSheet('font-size: 36px')
+
 
   def change_title(self, title: str) -> None:
+    '''Change the title to match the image name'''
     self.setText(title)
