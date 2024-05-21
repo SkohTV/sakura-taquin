@@ -162,7 +162,7 @@ class Game(QMainWindow):
 
 
 
-  def move_img(self, dir) -> None:
+  def move_img(self, dir: str, render = True) -> bool:
     '''Move an image to the blank spot'''
 
     # Get the blank spot
@@ -181,8 +181,8 @@ class Game(QMainWindow):
     elif dir == 'right' and not blank.current_x == self.level.value() - 1:
         case = blank.current_x + 1, blank.current_y
 
-    else:
-      return
+    else: # Move not allowed
+      return False
 
     # Find the case corresponding to coordinates and change them to the blank coordinates
     for i in self.image_array:
@@ -191,6 +191,10 @@ class Game(QMainWindow):
 
     # Set blank coordinates to selected case coordinates
     blank.current_x, blank.current_y = case
+
+    # Stop here if we are doing a randomizing
+    if not render:
+      return True
 
     # Regenerate image
     self.image_center.generate_image()
@@ -205,6 +209,8 @@ class Game(QMainWindow):
     # If finished, then end
     if self.full_check():
       self.stop_game()
+
+    return True
 
 
   def stop_game(self) -> None:

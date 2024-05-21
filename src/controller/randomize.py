@@ -26,24 +26,30 @@ class Randomize(QPushButton):
     self.model.timer.reset()
     self.model.game = True
 
-    # Pick blank square and its coords
-    blank = self.model.image_array[-1]
+    # Define some variables
     n = self.model.level.value()
-    blank.current_x, blank.current_y = n - 1, n - 1
+    self.directions = ['up', 'down', 'left', 'right']
 
-    # Select all squares EXCEPT blank (last)
-    first_images = self.model.image_array[:-1]
-    positions = []
+    # Do some random moves
+    for i in range(n**2 * 50):
+      dir = random.choice(self.directions)
+      self.model.move_img(dir, render=False)
 
-    # Add correct positions of all squares to list
-    for i in first_images:
-      positions.append((i.true_x, i.true_y))
-    random.shuffle(positions) # Shuffle the list of positions
+    # Move blank square to right max
+    val = True
+    while (val):
+      val = self.model.move_img('right', render=False)
 
-    # Set the current position of squares to shuffled position from created list
-    for itm, (x, y) in zip(first_images, positions):
-      itm.current_x, itm.current_y = x, y
-      
+    # Move blank square to bottom max
+    val = True
+    while (val):
+      val = self.model.move_img('down', render=False)
+
+    # If the image is already correct, then re-randomize
+    if self.model.full_check():
+      self.randomize()
+      return
+
     # Regenerate image
     self.model.image_center.generate_image()
 

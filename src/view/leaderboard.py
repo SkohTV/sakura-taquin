@@ -41,7 +41,7 @@ class Leaderboard(QLabel):
     if not self.scores:
       text += '<i>Aucun score...</i>'
     for i in self.scores:
-      text += f'{i.level}x{i.level} - {i.moves} coups - {i.time:.2f} s<br>'
+      text += f'{i.level}x{i.level} - {i.moves} cps - {i.time:.2f} s<br>'
 
     self.setText(text)
 
