@@ -21,13 +21,14 @@ class Randomize(QPushButton):
 
   def randomize(self) -> None:
     '''blablabla'''
-    images = self.model.image_array
+    # resets
+    self.model.count.reset()
+    self.model.timer.reset()
+    self.model.game = True
 
-    for idx, itm in enumerate(images):
-      if itm.is_blank:
-        blank = idx
-
-    images[-1], images[blank] = images[blank], images[-1] # type: ignore
+    blank = self.model.image_array[-1]
+    n = self.model.level.value()
+    blank.current_x, blank.current_y = n - 1, n - 1
 
     first_images = self.model.image_array[:-1]
     positions = []
@@ -39,6 +40,5 @@ class Randomize(QPushButton):
     for itm, (x, y) in zip(first_images, positions):
       itm.current_x, itm.current_y = x, y
       
-    self.model.image_array[:-1] = first_images
     self.model.image_center.generate_image()
 

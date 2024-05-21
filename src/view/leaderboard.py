@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
   from model.game import Game
 
-from datetime import timedelta
 from collections import namedtuple
 
 from PySide6 import QtCore
@@ -24,21 +23,20 @@ class Leaderboard(QLabel):
     self.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify)
     self.setStyleSheet('font-size: 18px')
 
-    # trash values
-    self.scores = [
-      Score(3, 3, timedelta(minutes=3, seconds=2)),
-      Score(2, 3, timedelta(minutes=1, seconds=20)),
-      Score(3, 1, timedelta(minutes=0, seconds=45))
-    ]
 
-  def add(self, level: int, moves: int, time: timedelta) -> None:
-    new_score = Score(level, time, moves)
+  def add(self, level: int, moves: int, time: float) -> None:
+    new_score = Score(level, moves, time)
     self.scores.append(new_score)
+
 
   def render(self) -> None:
     sorted(self.scores)
-    text = ''
+    text = '<b>----- Leaderboard -----</b><br>'
+
+    if not self.scores:
+      text += '<i>Aucun score...</i>'
     for i in self.scores:
-      text += f'{i.level}x{i.level} - {i.moves} coups - {i.time}\n'
+      text += f'{i.level}x{i.level} - {i.moves} coups - {i.time:.2f} s<br>'
+
     self.setText(text)
 

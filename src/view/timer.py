@@ -14,8 +14,26 @@ class Timer(QLabel):
   def __init__(self, model: Game) -> None:
     super().__init__()
     self.model = model
-    self.setText('0.0')
     self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 
-  # def change_title(self, title1: str) -> None:
-  #   self.setText(title1)
+    self.current_time = 0.00
+    self.timer = QtCore.QTimer()
+    self.timer.timeout.connect(self.update_time)
+
+  def start(self) -> None:
+    if not self.timer.isActive():
+      self.timer.start(10)
+
+  def stop(self) -> None:
+    if self.timer.isActive():
+      self.timer.stop()
+
+  def reset(self) -> None:
+    self.stop()
+    self.current_time = 0.00
+    self.setText('-.-- s')
+
+  def update_time(self) -> None:
+    self.current_time += 0.01
+    self.setText(f'{self.current_time:.2f} s')
+

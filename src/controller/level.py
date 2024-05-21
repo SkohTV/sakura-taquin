@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
   from model.game import Game
 
+from PySide6 import QtCore
 from PySide6.QtWidgets import QSpinBox
 
 
@@ -16,6 +17,7 @@ class Level(QSpinBox):
     self.setMinimum(2)
     self.setMaximum(99)
     self.setValue(3)
+    self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
 
     self.valueChanged.connect(self.model.cut_image)
 

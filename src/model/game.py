@@ -1,8 +1,8 @@
 from os import path
 from dataclasses import dataclass
 
-from PySide6 import QtGui
-from PySide6.QtWidgets import QGridLayout, QWidget
+from PySide6 import QtCore, QtGui
+from PySide6.QtWidgets import QGridLayout, QMainWindow, QWidget
 from PIL import Image
 
 from controller.level import Level
@@ -28,11 +28,14 @@ class Square:
   is_blank: bool = False
 
 
-class Game(QWidget):
+class Game(QMainWindow):
   '''Core of game window'''
 
   def __init__(self) -> None:
     super().__init__()
+    self.widget = QWidget()
+    self.setCentralWidget(self.widget)
+    self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
 
     QtGui.QFontDatabase.addApplicationFont('assets/super_creamy.ttf')
     QtGui.QFontDatabase.addApplicationFont('assets/comic_sans_ms.ttf')
@@ -43,6 +46,7 @@ class Game(QWidget):
     self.image_array: list[Square] = []
     self.small_size = 0
     self.full_size = 600
+    self.game = False
 
     self.name = Name(self)
     self.title = Title(self)
@@ -67,7 +71,7 @@ class Game(QWidget):
     self.grid_big.addWidget(self.randomize, 11, 3, 1, 4)
     self.grid_big.addWidget(self.upload, 11, 7, 1, 4)
     self.grid_big.addWidget(self.source, 11, 13, 1, 1)
-    self.setLayout(self.grid_big)
+    self.widget.setLayout(self.grid_big)
 
     self.setWindowTitle('Sakura\'s Taquin')
     self.setMinimumSize(900, 800)
@@ -130,6 +134,79 @@ class Game(QWidget):
     self.image_array.append(bl)
 
     self.randomize.randomize()
+
+
+  def full_check(self) -> bool:
+    for i in self.image_array:
+      if not i.current_x == i.true_x or not i.current_y == i.true_y:
+        return False
+    return True
+
+
+
+  def move_img(self, dir) -> None:
+    blank = self.image_array[-1]
+
+    if dir == 'up' and not blank.current_y == 0:
+        case = blank.current_x, blank.current_y - 1
+
+    elif dir == 'down' and not blank.current_y == self.level.value() - 1:
+        case = blank.current_x, blank.current_y + 1
+
+    elif dir == 'left' and not blank.current_x == 0:
+        case = blank.current_x - 1, blank.current_y
+
+    elif dir == 'right' and not blank.current_x == self.level.value() - 1:
+        case = blank.current_x + 1, blank.current_y
+
+    else:
+      return
+
+    for i in self.image_array:
+      if i.current_x == case[0] and i.current_y == case[1]:
+        i.current_x, i.current_y = blank.current_x, blank.current_y
+    blank.current_x, blank.current_y = case
+
+    self.image_center.generate_image()
+
+    if self.count.count == 0:
+      self.timer.start()
+
+    self.count.add()
+
+    if self.full_check():
+      self.stop_game()
+
+
+  def stop_game(self) -> None:
+    self.timer.stop()
+    self.leaderboard.add(level=self.level.value(), moves=self.count.count, time=self.timer.current_time)
+    self.leaderboard.render()
+    self.image_center.final_image()
+    self.game = False
+
+
+  def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:
+    if not self.game:
+      return
+
+    down = QtCore.Qt.Key.Key_Down
+    up = QtCore.Qt.Key.Key_Up
+    left = QtCore.Qt.Key.Key_Left
+    right = QtCore.Qt.Key.Key_Right
+
+    key = event.key()
+
+    if key == down:
+      self.move_img('up')
+    elif key == up:
+      self.move_img('down')
+    elif key == right:
+      self.move_img('left')
+    elif key == left:
+      self.move_img('right')
+
+
 
 
 if __name__ == '__main__':

@@ -20,8 +20,8 @@ class Count(QLabel):
 
   def add(self) -> None:
     self.count += 1
-    self.setText(str(self.count))
+    self.setText(f'{self.count} coups')
 
   def reset(self) -> None:
     self.count = 0
-    self.setText('0')
+    self.setText('- coups')
