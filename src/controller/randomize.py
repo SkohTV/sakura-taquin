@@ -47,7 +47,7 @@ class Randomize(QPushButton):
 
     # If the image is already correct, then re-randomize
     if self.model.full_check():
-      self.randomize()
+      self.randomize() # Recursive
       return
 
     # Regenerate image
